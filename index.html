@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Interactive Subtitles Overlay with Stable Tooltips</title>
+  <title>OAV1 - Interactive Subtitles Overlay with Stable Tooltips</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -162,7 +162,7 @@
     }
   }
 
-function bindTooltipHoverHandlers() {
+  function bindTooltipHoverHandlers() {
   subtitleBox.querySelectorAll(".highlight").forEach(span => {
     // Ensure we don't stack multiple event listeners
     span.removeEventListener("mouseenter", span._mouseenterHandler);
@@ -172,14 +172,6 @@ function bindTooltipHoverHandlers() {
       video.pause();
     };
 
-    span._mouseleaveHandler = () => {
-      video.play();
-    };
-
-    span.addEventListener("mouseenter", span._mouseenterHandler);
-    span.addEventListener("mouseleave", span._mouseleaveHandler);
-  });
-}
     span._mouseleaveHandler = () => {
       video.play();
     };
