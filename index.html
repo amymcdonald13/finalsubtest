@@ -55,14 +55,15 @@
       color: #fff;
       text-align: left;
       border-radius: 6px;
-      padding: 5px;
+      padding: 6px 8px;
       position: absolute;
       z-index: 10;
       bottom: 125%;
       left: 50%;
       transform: translateX(-50%);
-      white-space: nowrap;
+      white-space: normal;
       box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      word-wrap: break-word;
     }
 
     .highlight:hover .tooltip,
@@ -164,12 +165,33 @@
 
  function bindTooltipHoverHandlers() {
   subtitleBox.querySelectorAll(".highlight").forEach(span => {
-    // Ensure we don't stack multiple event listeners
     span.removeEventListener("mouseenter", span._mouseenterHandler);
     span.removeEventListener("mouseleave", span._mouseleaveHandler);
 
     span._mouseenterHandler = () => {
       video.pause();
+
+      const tooltip = span.querySelector(".tooltip");
+      if (!tooltip) return;
+
+      // Reset to default
+      tooltip.style.left = "50%";
+      tooltip.style.transform = "translateX(-50%)";
+
+      const rect = tooltip.getBoundingClientRect();
+      const padding = 10;
+
+      const overLeft = rect.left < padding;
+      const overRight = rect.right > window.innerWidth - padding;
+
+      if (overLeft) {
+        tooltip.style.left = `${padding}px`;
+        tooltip.style.transform = "translateX(0)";
+      } else if (overRight) {
+        tooltip.style.left = "auto";
+        tooltip.style.right = `${padding}px`;
+        tooltip.style.transform = "translateX(0)";
+      }
     };
 
     span._mouseleaveHandler = () => {
@@ -180,6 +202,7 @@
     span.addEventListener("mouseleave", span._mouseleaveHandler);
   });
 }
+
 
   subtitleBox.addEventListener("click", event => {
     const highlight = event.target.closest(".highlight");
