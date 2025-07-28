@@ -162,23 +162,24 @@
     }
   }
 
-  function bindTooltipHoverHandlers() {
-    subtitleBox.querySelectorAll(".highlight").forEach(span => {
-      span.addEventListener("mouseenter", () => {
-        if (!video.paused) {
-          video.pause();
-          span.dataset.wasPlaying = "true";
-        }
-      });
+ function bindTooltipHoverHandlers() {
+  subtitleBox.querySelectorAll(".highlight").forEach(span => {
+    // Ensure we don't stack multiple event listeners
+    span.removeEventListener("mouseenter", span._mouseenterHandler);
+    span.removeEventListener("mouseleave", span._mouseleaveHandler);
 
-      span.addEventListener("mouseleave", () => {
-        if (span.dataset.wasPlaying === "true") {
-          video.play();
-          span.removeAttribute("data-was-playing");
-        }
-      });
-    });
-  }
+    span._mouseenterHandler = () => {
+      video.pause();
+    };
+
+    span._mouseleaveHandler = () => {
+      video.play();
+    };
+
+    span.addEventListener("mouseenter", span._mouseenterHandler);
+    span.addEventListener("mouseleave", span._mouseleaveHandler);
+  });
+}
 
   subtitleBox.addEventListener("click", event => {
     const highlight = event.target.closest(".highlight");
